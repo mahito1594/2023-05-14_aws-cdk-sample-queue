@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const BASE_URL = process.env.BASE_URL;
+
 export const postMessage = async (accessToken: string, message: string) => {
   console.log(
     `Post message with ${JSON.stringify({
@@ -12,7 +14,7 @@ export const postMessage = async (accessToken: string, message: string) => {
       "/anything",
       { message: message },
       {
-        baseURL: "https://httpbin.org",
+        baseURL: BASE_URL,
         headers: {
           Authorization: `Bearer ${accessToken}`,
           Accept: "application/json",

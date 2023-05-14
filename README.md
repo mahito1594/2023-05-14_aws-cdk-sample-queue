@@ -80,3 +80,10 @@ HTTP メソッドを実行するために [axios](https://axios-http.com) を利
 
 > **NOTE**
 > Array.prototype.forEach の中で async/await を上手く使うには少し頭を使う。
+
+### その他
+ベース URL httpbin.org をハードコードするのではなく、Lambda の環境変数から取得するようにする。
+Lambda 関数のコンソールからの設定だと `npm run cdk deploy` するたびに、コンソールから消えてしまう。
+aws-cdk で Lambda 関数を作成する際に環境変数の設定も入れる。
+
+See [AWS Lambda 環境変数の仕様](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/configuration-envvars.html)

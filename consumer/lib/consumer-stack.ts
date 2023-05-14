@@ -1,4 +1,5 @@
 import { Duration, Stack, StackProps } from "aws-cdk-lib";
+import { ManagedPolicy, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
@@ -14,6 +15,9 @@ export class ConsumerStack extends Stack {
       entry: path.join(__dirname, "consumer-stack.handler.ts"),
       handler: "handler",
       timeout: Duration.seconds(10),
+      environment: {
+        BASE_URL: process.env.BASE_URL ?? "",
+      },
     });
   }
 }

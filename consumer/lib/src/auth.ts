@@ -2,8 +2,9 @@ import {
   GetSecretValueCommand,
   SecretsManagerClient,
 } from "@aws-sdk/client-secrets-manager";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
+const BASE_URL = process.env.BASE_URL;
 const secretName = "sample-auth";
 
 const getSecrets = async () => {
@@ -48,7 +49,7 @@ export const getAccessToken = async () => {
 
   const result = await axios
     .get<{ authenticated: boolean; user: string }>(`/${userId}/${password}`, {
-      baseURL: "https://httpbin.org/basic-auth",
+      baseURL: BASE_URL,
       headers: { Authorization: `Basic ${basicAuth}` },
     })
     .then((res) => {
