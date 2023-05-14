@@ -56,3 +56,27 @@ cd producer && npm run send-message
 
 設定が上手くいっていれば Lambda 関数がトリガーされているはず。
 Lambda 関数コンソールから CloudWatch のログを見て、送ったメッセージの内容が出力されていれば OK.
+
+### Lambda から Secret Manager 経由で認証情報を取得する
+SQS から受け取ったメッセージを外部システムへ POST することを想定。
+API call のための認証情報を Secret Manager から取得する。
+
+#### Secret Manager にパラメータを設定する
+コンソールから設定できる。
+シークレット名は `sample-auth` にしておく（何でもよい）。
+
+#### Lambda 関数に拡張機能を入れる
+[ユーザーガイド](https://docs.aws.amazon.com/ja_jp/secretsmanager/latest/userguide/retrieving-secrets_lambda.html)を参考に、AWS Parameters and Secrets Lambda Extension を ConsumerStack で作成した Lambda 関数のレイヤーに追加する。
+
+また Lambda 実行ロールを、シークレットにアクセスできるように適切に変更する。
+今回は [SecretsManagerReadWrite](https://us-east-1.console.aws.amazon.com/iamv2/home?region=ap-northeast-1#/policies/details/arn%3Aaws%3Aiam%3A%3Aaws%3Apolicy%2FSecretsManagerReadWrite?section=policy_permissions) ポリシーを Lambda 実行ロールに追加。
+
+Lambda からシークレットを取得するには [`@aws-sdk/client-secrets-manager`](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/) を利用する。
+
+#### Lambda からシークレットを取得して HTTP メソッドを実行する
+例として [httpbin.org](https://httpbin.org) を利用した。
+https://httpbin.org/basic-auth はアクセストークンを返却したりはしないので、本当に動作しているかのみ確認する。
+HTTP メソッドを実行するために [axios](https://axios-http.com) を利用している。
+
+> **NOTE**
+> Array.prototype.forEach の中で async/await を上手く使うには少し頭を使う。

@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { Duration, Stack, StackProps } from "aws-cdk-lib";
 import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
@@ -13,6 +13,7 @@ export class ConsumerStack extends Stack {
       architecture: Architecture.X86_64,
       entry: path.join(__dirname, "consumer-stack.handler.ts"),
       handler: "handler",
+      timeout: Duration.seconds(10),
     });
   }
 }

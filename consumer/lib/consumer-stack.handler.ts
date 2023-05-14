@@ -1,9 +1,19 @@
 import { SQSHandler } from "aws-lambda";
-import { decorator } from "./src/decorator";
+import { getAccessToken } from "./src/auth";
+import { postMessage } from "./src/postMessage";
 
 export const handler: SQSHandler = async (event, context) => {
-  event.Records.forEach((record) => {
-    const { body } = record;
-    console.log(decorator(body));
-  });
+  const tokenResult = await getAccessToken();
+
+  if (!tokenResult.ok) {
+    console.error("Authentication Fail");
+    return;
+  }
+
+  console.log(`Access Token: ${tokenResult.accessToken}`);
+
+  for (const { body } of event.Records) {
+    const postResult = await postMessage(tokenResult.accessToken, body);
+    console.log(`Recieved...${JSON.stringify(postResult)}`);
+  }
 };
