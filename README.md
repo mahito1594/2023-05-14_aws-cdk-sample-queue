@@ -73,6 +73,12 @@ API call のための認証情報を Secret Manager から取得する。
 
 Lambda からシークレットを取得するには [`@aws-sdk/client-secrets-manager`](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/) を利用する。
 
+##### Lambda の実行ロールについて
+aws-cdk で実行ロールを定義することもできる。
+最終的なサンプルコードでは `lambda-sqs-sample-role` というロールを定義して、Lambda 関数の実効ロールとして指定した。
+
+See [aws-cdk-lib/aws-iam](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_iam-readme.html)
+
 #### Lambda からシークレットを取得して HTTP メソッドを実行する
 例として [httpbin.org](https://httpbin.org) を利用した。
 https://httpbin.org/basic-auth はアクセストークンを返却したりはしないので、本当に動作しているかのみ確認する。

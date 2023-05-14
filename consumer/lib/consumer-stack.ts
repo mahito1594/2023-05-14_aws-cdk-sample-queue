@@ -9,6 +9,17 @@ export class ConsumerStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const role = new Role(this, "lambda-sqs-sample-role", {
+      roleName: "lambda-sqs-sample-role",
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName("SecretsManagerReadWrite"),
+        ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaSQSQueueExecutionRole"
+        ),
+      ],
+    });
+
     new NodejsFunction(this, "sample-queue-handler", {
       runtime: Runtime.NODEJS_18_X,
       architecture: Architecture.X86_64,
@@ -18,6 +29,7 @@ export class ConsumerStack extends Stack {
       environment: {
         BASE_URL: process.env.BASE_URL ?? "",
       },
+      role: role,
     });
   }
 }
